@@ -73,8 +73,8 @@ contract NFTMarketplace {
         uint256 fee = (listing.price * feePercent) / 10000;
         uint256 sellerAmount = listing.price - fee;
         
-        payable(treasury).transfer(fee);
-        payable(listing.seller).transfer(sellerAmount);
+        payable(treasury).call{value:fee}("");
+        payable(listing.seller).call{sellerAmount}();
         IERC721(nft).transferFrom(address(this), msg.sender, tokenId);
         
         emit Sold(nft, tokenId, msg.sender, listing.price);
